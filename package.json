@@ -1,0 +1,16 @@
+{
+  "name": "swoop-cli",
+  "version": "1.0.0",
+  "description": "CLI tools for Swoop",
+  "main": "",
+  "dependencies": {
+    "@harmony-js/core": "=0.1.50",
+    "@harmony-swoop/core": "^1.1.1",
+    "@harmony-swoop/periphery": "^1.1.0",
+    "axios": "^0.19.2",
+    "dotenv": "^8.2.0",
+    "tslib": "^2.0.0",
+    "web3": "^1.2.11",
+    "yargs": "^15.4.1"
+  }
+}
