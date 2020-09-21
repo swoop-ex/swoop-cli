@@ -67,28 +67,51 @@ const walletAddress = factoryContract.wallet.signer.address;
 const walletAddressBech32 = getAddress(walletAddress).bech32;
 
 async function status() {
-  let length = await factoryInstance.allPairsLength().call(network.gasOptions());
-  console.log(`allPairsLength: ${length.toNumber()}`)
+  let feeToSetter = await factoryInstance.feeToSetter().call(network.gasOptions());
+  console.log(`The current feeToSetter address is ${feeToSetter}`)
 
-  /*result = await factoryInstance.feeToSetter().call(network.gasOptions());
-  console.log("Result from feeToSetter")
-  console.log(result)*/
+    /*result = await factoryInstance.setFeeToSetter(walletAddress).send(network.gasOptions());
+  console.log(result.status)*/
+
+  let feeTo = await factoryInstance.feeTo().call(network.gasOptions());
+  console.log(`The current feeTo address is ${feeTo}\n`)
 }
 
 async function createPair() {
-  let result = await factoryInstance.createPair(tokenAAddress, tokenBAddress).send(network.gasOptions());
-  console.log(`status: ${result.status} - tx status: ${result.transaction.txStatus} - tx hash: ${result.transaction.receipt.transactionHash}`);
+  let length = await pairsLength();
 
-  /*result = await factoryInstance.setFeeToSetter(walletAddress).send(network.gasOptions());
-  console.log(result.status)*/
+  console.log(`Creating a new pair using tokens ${tokenAAddress} / ${tokenBAddress} ...`);
+  let result = await factoryInstance.createPair(tokenAAddress, tokenBAddress).send(network.gasOptions());
+  console.log(`Status: ${result.status} - tx status: ${result.transaction.txStatus} - tx hash: ${result.transaction.receipt.transactionHash}\n`);
+
+  if (result.status == 'rejected' && length == 0) {
+    console.log(`Failed to create a new pair using tokens ${tokenAAddress} / ${tokenBAddress}`);
+    console.log(`You're most likely running this command against a smart contract deployed on a version of Harmony lacking the ChainId opcode in the EVM implementation.`)
+    console.log(`Use the EVM PR to run a compatible version on localnet: git fetch origin refs/pull/3356/head && git checkout -b rlan35/update_evm FETCH_HEAD && ./test/debug.sh`)
+  }
+
+  length = await pairsLength();
+  let index = length-1;
+
+  console.log(`Fetching pair address for the token pair ${tokenAAddress} / ${tokenBAddress} ...`);
+  let pairAddress = await factoryInstance.getPair(tokenAAddress, tokenBAddress).call(network.gasOptions());
+  console.log(`The pair address for the token pair ${tokenAAddress} / ${tokenBAddress} is: ${pairAddress}\n`);
+
+  console.log(`Fetching pair address for the token pair via index ${index} ...`);
+  pairAddress = await factoryInstance.allPairs(index).call(network.gasOptions());
+  console.log(`The pair address for the token pair at index ${index} is: ${pairAddress}\n`);
+}
+
+async function pairsLength() {
+  let length = await factoryInstance.allPairsLength().call(network.gasOptions());
+  console.log(`There is a total of ${length.toNumber()} pair(s) created by this factory\n`)
+  return length
 }
 
 status()
   .then(() => {
     createPair().then(() => {
-      status().then(() => {
-        process.exit(0);
-      })
+      process.exit(0);
     })
   })
   .catch(function(err){
