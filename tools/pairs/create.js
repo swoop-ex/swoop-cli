@@ -87,7 +87,7 @@ async function createPair() {
   if (result.status == 'rejected' && length == 0) {
     console.log(`Failed to create a new pair using tokens ${tokenAAddress} / ${tokenBAddress}`);
     console.log(`You're most likely running this command against a smart contract deployed on a version of Harmony lacking the ChainId opcode in the EVM implementation.`)
-    console.log(`Use the EVM PR to run a compatible version on localnet: git fetch origin refs/pull/3356/head && git checkout -b rlan35/update_evm FETCH_HEAD && ./test/debug.sh`)
+    console.log(`Use the EVM PR to run a compatible version on localnet: git fetch origin refs/pull/3356/head && git checkout -b rlan35/update_evm FETCH_HEAD && ./test/debug.sh\n`)
   }
 
   length = await pairsLength();
@@ -97,9 +97,11 @@ async function createPair() {
   let pairAddress = await factoryInstance.getPair(tokenAAddress, tokenBAddress).call(network.gasOptions());
   console.log(`The pair address for the token pair ${tokenAAddress} / ${tokenBAddress} is: ${pairAddress}\n`);
 
-  console.log(`Fetching pair address for the token pair via index ${index} ...`);
-  pairAddress = await factoryInstance.allPairs(index).call(network.gasOptions());
-  console.log(`The pair address for the token pair at index ${index} is: ${pairAddress}\n`);
+  if (index >= 0) {
+    console.log(`Fetching pair address for the token pair via index ${index} ...`);
+    pairAddress = await factoryInstance.allPairs(index).call(network.gasOptions());
+    console.log(`The pair address for the token pair at index ${index} is: ${pairAddress}\n`);
+  }
 }
 
 async function pairsLength() {
