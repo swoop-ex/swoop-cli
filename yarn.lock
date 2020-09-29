@@ -306,23 +306,25 @@
     "@types/bn.js" "^4.11.3"
     bn.js "^4.11.8"
 
-"@harmony-swoop/core@1.1.1", "@harmony-swoop/core@^1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@harmony-swoop/core/-/core-1.1.1.tgz#19d238ac8547a4d45283e792c20d1857d553a0bd"
-  integrity sha512-AATshDAWjVGT8PjXS2sJboG0WTpjRCglG4GbgDvpB1JfxPtZa+Lo6n24EdgltEEyd5JvXdGBfGH1Ae8aQnV7Nw==
+"@harmony-swoop/core@^1.1.1":
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/@harmony-swoop/core/-/core-1.1.2.tgz#0b215365015df3c6131f7f04035473cf2b7c00a9"
+  integrity sha512-KwMouhUaq6NJ0U748uSJcq00W3C8tt+uif6EGTJs/PNSeVmTkzVHa3KZGDetiCaSbRaTO537tWjKeo+aWWUq7Q==
 
-"@harmony-swoop/lib@1.1.4":
-  version "1.1.4"
-  resolved "https://registry.yarnpkg.com/@harmony-swoop/lib/-/lib-1.1.4.tgz#b583ee3aa0677363d78ecc7fd5c6bfe12975df99"
-  integrity sha512-38ngupmxVqDFAkWn9G9mKJRd7UF04VfIaikBsymJBm8TIBGRwp5GMNNu6Nnxakcib2scxtbhOvjTuwq59RjPzg==
+"@harmony-swoop/default-token-list@^1.0.0":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@harmony-swoop/default-token-list/-/default-token-list-1.0.1.tgz#7be48ee6804fb99d0c664e9457ce1be77f665cc1"
+  integrity sha512-XrQesB5jKcMAN8gTg8qTrNcRZn3KuYpRhjAGlTQ+LzrUqXc7wPPKom6vo2Rr1uxcYZuDDUtdUMXx43YKk5kZDw==
+
+"@harmony-swoop/misc@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@harmony-swoop/misc/-/misc-1.0.1.tgz#419d9e4ebf041a0920df89ecedeb25a661ad2389"
+  integrity sha512-wQR+IjfsLnHvLgWpQFl0QLYcEwoqGUd3XVJRvqkEhILT4WLHYeqjumZl9tas1AsrvuwCPt71DtozSvCGhphrxA==
 
 "@harmony-swoop/periphery@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@harmony-swoop/periphery/-/periphery-1.1.0.tgz#2489b81ae08b10755960213fcf56f4fc486e0877"
-  integrity sha512-MQ7tVHN1BUZYzNo9D+NQt/q03hmPhIYXB6BY8vNXnglw4+wChqaYOntZRkpnXmU7i0q36Rd9pxnAurFOA1YqJA==
-  dependencies:
-    "@harmony-swoop/core" "1.1.1"
-    "@harmony-swoop/lib" "1.1.4"
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@harmony-swoop/periphery/-/periphery-1.1.1.tgz#675e57867845f0474947a6a1d1369b353e39f559"
+  integrity sha512-dlSZC76e9bRiyhC3Oji0fXlM4nD8UGDqCnVz+pybhFW3vBf80/LenA293KSEkFBz0vHnVfJikp0wB5SQ/tphcw==
 
 "@harmony-swoop/utils@^1.0.0":
   version "1.0.4"
@@ -354,9 +356,9 @@
   integrity sha512-rr+OQyAjxze7GgWrSaJwydHStIhHq2lvY3BOC2Mj7KnzI7XK0Uw1TOOdI9lDoajEbSWLiYgoo4f1R51erQfhPQ==
 
 "@types/node@*":
-  version "14.11.1"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.11.1.tgz#56af902ad157e763f9ba63d671c39cda3193c835"
-  integrity sha512-oTQgnd0hblfLsJ6BvJzzSL+Inogp3lq9fGgqRkMB/ziKMgEUaFl801OncOzUmalfzt14N0oPHMK47ipl+wbTIw==
+  version "14.11.2"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.11.2.tgz#2de1ed6670439387da1c9f549a2ade2b0a799256"
+  integrity sha512-jiE3QIxJ8JLNcb1Ps6rDbysDhN4xa8DJJvuC9prr6w+1tIh+QAbYyNF3tyiZNLDBIuBCf4KEcV2UvQm/V60xfA==
 
 "@types/node@^12.12.6":
   version "12.12.62"
@@ -487,9 +489,9 @@ bcrypt-pbkdf@^1.0.0:
     tweetnacl "^0.14.3"
 
 bignumber.js@^9.0.0:
-  version "9.0.0"
-  resolved "https://registry.yarnpkg.com/bignumber.js/-/bignumber.js-9.0.0.tgz#805880f84a329b5eac6e7cb6f8274b6d82bdf075"
-  integrity sha512-t/OYhhJ2SD+YGBQcjY8GzzDHEk9f3nerxjtfa6tlMXfe7frs/WozhvCNoGvpM0P3bNf3Gq5ZRMlGr5f3r4/N8A==
+  version "9.0.1"
+  resolved "https://registry.yarnpkg.com/bignumber.js/-/bignumber.js-9.0.1.tgz#8d7ba124c882bfd8e43260c67475518d0689e4e5"
+  integrity sha512-IdZR9mh6ahOBv/hYGiXyVuyCetmGJhtYkqLBpTStdhEGjegpPlUawydyaF3pbIOFynJTpllEs+NP+CS9jKFLjA==
 
 bindings@^1.5.0:
   version "1.5.0"
@@ -2542,9 +2544,9 @@ uuid@^3.3.2:
   integrity sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==
 
 varint@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/varint/-/varint-5.0.0.tgz#d826b89f7490732fabc0c0ed693ed475dcb29ebf"
-  integrity sha1-2Ca4n3SQcy+rwMDtaT7Uddyynr8=
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/varint/-/varint-5.0.2.tgz#5b47f8a947eb668b848e034dcfa87d0ff8a7f7a4"
+  integrity sha512-lKxKYG6H03yCZUpAGOPOsMcGxd1RHCu1iKvEHYDPmTyq2HueGhD73ssNBqqQWfvYs04G9iUFRvmAVLW20Jw6ow==
 
 vary@^1, vary@~1.1.2:
   version "1.1.2"
