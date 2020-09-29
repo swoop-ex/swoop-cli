@@ -23,13 +23,13 @@ You can send one specific token, e.g:
 node tools/tokens/transfer.js --network NETWORK --to ADDRESS --amount AMOUNT --token 1BUSD
 ```
 
-Or send AMOUNT tokens (using the specified NETWORK) for all tokens available in Swoop's default token list:
+Or perform transfers for all tokens available in Swoop's default token list:
 ```
 node tools/tokens/transfer.js --network NETWORK --to ADDRESS --amount AMOUNT --token all
 ```
 
 #### Swapping, ONE -> wONE
-tools/tokens/swap.js - swap ONE for WONE
+tools/tokens/wone.js - swap ONE for WONE
 ```
 node tools/tokens/wone.js --network $NETWORK --token $WONE --amount 1
 ```
