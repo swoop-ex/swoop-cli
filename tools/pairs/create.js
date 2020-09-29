@@ -52,7 +52,6 @@ const { getAddress } = require("@harmony-js/crypto");
 
 // Vars
 const network = new NetworkEnv(argv.network);
-const v2Factory = require('@harmony-swoop/core/build/contracts/UniswapV2Factory.json');
 
 const factoryContract = network.loadContract('@harmony-swoop/core/build/contracts/UniswapV2Factory.json', factoryAddress, 'deployer');
 const factoryInstance = factoryContract.methods;
