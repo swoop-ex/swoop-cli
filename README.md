@@ -10,6 +10,14 @@ Create a new token pair using the `UniswapV2Factory` contract.
 node tools/pairs/create.js --network NETWORK --factory UNISWAPV2FACTORY --tokena TOKEN_ADDRESS --tokenb TOKEN_ADDRESS 
 ```
 
+### Liquidity
+
+Add liquidity to a pool.
+
+```
+node tools/liquidity/add.js --network NETWORK --router ROUTER_ADDRESS --tokena TOKEN_ADDRESS --tokenb TOKEN_ADDRESS
+```
+
 ### Tokens
 
 #### Transfering tokens
