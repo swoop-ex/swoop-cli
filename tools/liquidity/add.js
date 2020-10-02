@@ -121,8 +121,8 @@ async function createPair() {
 
 async function approvals() {
   const approveFor = [tokenAAddress, tokenBAddress];
-  const approvalAmount = 1000000000;
-  const approvalAmountWei = web3.utils.toWei(argv.amounta);
+  const approvalAmount = '1000000000';
+  const approvalAmountWei = web3.utils.toWei(approvalAmount);
   
   for (const address of approveFor) {
     const erc20Contract = network.loadContract('@harmony-swoop/periphery/build/contracts/IERC20.json', address, 'deployer');
