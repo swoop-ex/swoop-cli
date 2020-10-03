@@ -46,13 +46,18 @@ const argv = yargs
       type: 'string',
       default: '1'
     })
+    .option('generate-onchain-address', {
+      alias: 'g',
+      description: 'Generate an address using on the onchain pairAddressFor function - requires a custom router contract.',
+      type: 'boolean',
+    })
     .help()
     .alias('help', 'h')
     .argv;
 
-const routerAddress = argv.router;
-const tokenAAddress = argv.tokena;
-const tokenBAddress = argv.tokenb;
+var routerAddress = argv.router;
+var tokenAAddress = argv.tokena;
+var tokenBAddress = argv.tokenb;
 
 if (routerAddress == null || routerAddress == '') {
   console.log('You must supply a router address using --router CONTRACT_ADDRESS or -r CONTRACT_ADDRESS!');
@@ -72,15 +77,23 @@ if (tokenBAddress == null || tokenBAddress == '') {
 // Libs
 const web3 = require('web3');
 const { NetworkEnv } = require("@harmony-swoop/utils");
-const { getAddress } = require("@harmony-js/crypto");
+const { getAddress: hmyGetAddress } = require("@harmony-js/crypto");
+
+const { Pair, Token } = require("@harmony-swoop/sdk");
+
+const { getAddress: ethGetAddress } = require("@ethersproject/address");
+
+// Vars
+const network = new NetworkEnv(argv.network);
+
+routerAddress = ethGetAddress(routerAddress);
+tokenAAddress = ethGetAddress(tokenAAddress);
+tokenBAddress = ethGetAddress(tokenBAddress);
 
 const amountADesired = web3.utils.toWei(argv.amounta);
 const amountBDesired = web3.utils.toWei(argv.amountb);
 const amountAMinimum = web3.utils.toWei(argv.minamounta);
 const amountBMinimum = web3.utils.toWei(argv.minamountb);
-
-// Vars
-const network = new NetworkEnv(argv.network);
 
 const deadline = 100000;
 const dateNow = Math.ceil(Date.now() / 1000);
@@ -90,7 +103,7 @@ const routerContract = network.loadContract('@harmony-swoop/periphery/build/cont
 const routerInstance = routerContract.methods;
 
 const walletAddress = routerContract.wallet.signer.address;
-const walletAddressBech32 = getAddress(walletAddress).bech32;
+const walletAddressBech32 = hmyGetAddress(walletAddress).bech32;
 
 async function status() {
   let factoryAddress = await routerInstance.factory().call(network.gasOptions());
@@ -143,20 +156,31 @@ async function addLiquidity() {
   console.log(`Status: ${result.status} - tx status: ${result.transaction.txStatus} - tx hash: ${result.transaction.receipt.transactionHash}\n`);
 }
 
-async function checkGeneratedAddress() {
-  let factoryAddress = await routerInstance.factory().call(network.gasOptions());
-  console.log(`The factory address for the router ${routerAddress} is: ${factoryAddress}\n`)
+async function generateAddress() {
+  const tokenA = new Token(network.chainId, tokenAAddress, 18);
+  const tokenB = new Token(network.chainId, tokenBAddress, 18);
 
-  console.log(`Fetching calculated pair address for the token pair ${tokenAAddress} / ${tokenBAddress} ...`);
-  let pairAddress = await routerInstance.pairAddress(factoryAddress, tokenAAddress, tokenBAddress).call(network.gasOptions());
-  console.log(`The calculated pair address for the token pair ${tokenAAddress} / ${tokenBAddress} is: ${pairAddress}\n`);
+  const pairAddress = Pair.getAddress(tokenA, tokenB);
+
+  console.log(`Javascript/Swoop SDK: The generated pair address for the token pair ${tokenAAddress} / ${tokenBAddress} is: ${pairAddress}\n`);
+
+  if (argv['generate-onchain-address']) {
+    let factoryAddress = await routerInstance.factory().call(network.gasOptions());
+    console.log(`The factory address for the router ${routerAddress} is: ${factoryAddress}\n`)
+  
+    console.log(`Fetching calculated pair address for the token pair ${tokenAAddress} / ${tokenBAddress} ...`);
+    let pairAddress = await routerInstance.pairAddressFor(factoryAddress, tokenAAddress, tokenBAddress).call(network.gasOptions());
+    console.log(`Solidity/UniswapV2Router02->pairAddressFor: The generated pair address for the token pair ${tokenAAddress} / ${tokenBAddress} is: ${pairAddress}\n`);
+  }
 }
 
 status().then(() => {
   approvals().then(() => {
     addLiquidity().then(() => {
       status().then(() => {
-        process.exit(0);
+        generateAddress().then(() => {
+          process.exit(0);
+        })
       })
     })
   })
