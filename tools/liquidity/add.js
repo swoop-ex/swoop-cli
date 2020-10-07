@@ -78,16 +78,23 @@ if (tokenBAddress == null || tokenBAddress == '') {
 const web3 = require('web3');
 const { NetworkEnv } = require("@harmony-swoop/utils");
 const { getAddress: hmyGetAddress } = require("@harmony-js/crypto");
+const { hexToNumber} = require('@harmony-js/utils');
 
-const { Pair, Token } = require("@harmony-swoop/sdk");
-
+const { Pair, Token, WONE } = require("@harmony-swoop/sdk");
 const { getAddress: ethGetAddress } = require("@ethersproject/address");
 
 // Vars
 const network = new NetworkEnv(argv.network);
+const woneAddress = ethGetAddress(WONE[network.chainId].address);
 
 routerAddress = ethGetAddress(routerAddress);
+
+const tokenAAddressIsONE = isONE(tokenAAddress);
+tokenAAddress = tokenAAddressIsONE ? woneAddress : tokenAAddress;
 tokenAAddress = ethGetAddress(tokenAAddress);
+
+const tokenBAddressIsONE = isONE(tokenBAddress);
+tokenBAddress = tokenBAddressIsONE ? woneAddress : tokenBAddress;
 tokenBAddress = ethGetAddress(tokenBAddress);
 
 const amountADesired = web3.utils.toWei(argv.amounta);
@@ -102,8 +109,20 @@ const deadlineFromNow = dateNow + deadline
 const routerContract = network.loadContract('@harmony-swoop/periphery/build/contracts/UniswapV2Router02.json', routerAddress, 'deployer');
 const routerInstance = routerContract.methods;
 
+const woneContract = network.loadContract('@harmony-swoop/misc/build/contracts/WONE.json', woneAddress, 'deployer');
+const woneInstance = woneContract.methods;
+
 const walletAddress = routerContract.wallet.signer.address;
 const walletAddressBech32 = hmyGetAddress(walletAddress).bech32;
+
+function divider(linebreak) {
+  repeat = 100;
+  linebreak = typeof linebreak !== 'undefined' ? linebreak : false;
+  console.log('-'.repeat(repeat));
+  if (linebreak) {
+    console.log('');
+  }
+}
 
 async function status() {
   let factoryAddress = await routerInstance.factory().call(network.gasOptions());
@@ -113,11 +132,53 @@ async function status() {
   const factoryInstance = factoryContract.methods;
 
   let length = await factoryInstance.allPairsLength().call(network.gasOptions());
-  console.log(`There is a total of ${length.toNumber()} pair(s) created by this factory\n`)
+  console.log(`There is a total of ${length.toNumber()} pair(s) created by this factory\n`);
 
   console.log(`Fetching pair address for the token pair ${tokenAAddress} / ${tokenBAddress} ...`);
   let pairAddress = await factoryInstance.getPair(tokenAAddress, tokenBAddress).call(network.gasOptions());
   console.log(`The pair address for the token pair ${tokenAAddress} / ${tokenBAddress} is: ${pairAddress}\n`);
+
+  if (pairAddress === '0x0000000000000000000000000000000000000000') {
+    console.log(`The pair ${tokenAAddress} / ${tokenBAddress} doesn't exist yet!\n`);
+  } else {
+    let pairContract = network.loadContract('@harmony-swoop/core/build/contracts/UniswapV2Pair.json', pairAddress, 'deployer');
+    let pairInstance = pairContract.methods;
+
+    let name = await pairInstance.name().call(network.gasOptions());
+    console.log(`The name for the token pair ${tokenAAddress} / ${tokenBAddress} is: ${name}\n`);
+
+    let symbol = await pairInstance.symbol().call(network.gasOptions());
+    console.log(`The symbol for the token pair ${tokenAAddress} / ${tokenBAddress} is: ${symbol}\n`);
+
+    let decimals = await pairInstance.decimals().call(network.gasOptions());
+    console.log(`The decimals for the token pair ${tokenAAddress} / ${tokenBAddress} is: ${decimals}\n`);
+
+    let totalSupply = await pairInstance.totalSupply().call(network.gasOptions());
+    console.log(`The total supply for the token pair ${tokenAAddress} / ${tokenBAddress} is: ${web3.utils.fromWei(totalSupply)}\n`);
+
+    let minimumLiquidity = await pairInstance.MINIMUM_LIQUIDITY().call(network.gasOptions());
+    console.log(`The minimum liqudity for the token pair ${tokenAAddress} / ${tokenBAddress} is: ${minimumLiquidity}\n`);
+
+    let factory = await pairInstance.factory().call(network.gasOptions());
+    console.log(`The factory address for the token pair ${tokenAAddress} / ${tokenBAddress} is: ${factory}\n`);
+
+    let token0 = await pairInstance.token0().call(network.gasOptions());
+    console.log(`The token0 address for the token pair ${tokenAAddress} / ${tokenBAddress} is: ${token0}\n`);
+
+    let token1 = await pairInstance.token1().call(network.gasOptions());
+    console.log(`The token1 address for the token pair ${tokenAAddress} / ${tokenBAddress} is: ${token1}\n`);
+
+    let reserves = await pairInstance.getReserves().call(network.gasOptions());
+    let timestamp = hexToNumber('0x'+reserves['_blockTimestampLast']);
+    let dateTime = (timestamp > 0) ? stringDate(timestamp) : '';
+
+    console.log(`The reserves for the token pair ${tokenAAddress} / ${tokenBAddress} is:`);
+    console.log(`  Reserve 0: ${reserves['_reserve0']}`);
+    console.log(`  Reserve 1: ${reserves['_reserve1']}`);
+    console.log(`  BlockTimestampLast: ${dateTime} (${timestamp})\n`);
+  }
+
+  divider(true);
 }
 
 async function createPair() {
@@ -130,6 +191,8 @@ async function createPair() {
   console.log(`Creating a new pair using tokens ${tokenAAddress} / ${tokenBAddress} ...`);
   let result = await factoryInstance.createPair(tokenAAddress, tokenBAddress).send(network.gasOptions());
   console.log(`Status: ${result.status} - tx status: ${result.transaction.txStatus} - tx hash: ${result.transaction.receipt.transactionHash}\n`);
+  
+  divider(true);
 }
 
 async function approvals() {
@@ -144,16 +207,55 @@ async function approvals() {
     let balance = await erc20ContractInstance.balanceOf(walletAddress).call(network.gasOptions());
     console.log(`Balance of token ${address} for address ${walletAddress} is: ${web3.utils.fromWei(balance)}\n`);
     
-    console.log(`Attempting to approve ${routerAddress} to spend ${approvalAmount} tokens (${address}) for ${walletAddress} ...`);
-    const result = await erc20ContractInstance.approve(routerAddress, approvalAmountWei).send(network.gasOptions());
-    console.log(`Status: ${result.status} - tx status: ${result.transaction.txStatus} - tx hash: ${result.transaction.receipt.transactionHash}\n`);
+    console.log(`Checking allowance for router ${routerAddress} to spend ${approvalAmount} tokens (${address}) for ${walletAddress} ...`);
+    const allowance = await erc20ContractInstance.allowance(walletAddress, routerAddress).call(network.gasOptions());
+    console.log(`Allowance for router ${routerAddress} to spend ${approvalAmount} tokens (${address}) for address ${walletAddress} is: ${web3.utils.fromWei(allowance)}\n`)
+
+    if (allowance < approvalAmountWei) {
+      console.log(`Attempting to approve router ${routerAddress} to spend ${approvalAmount} tokens (${address}) for ${walletAddress} ...`);
+      const result = await erc20ContractInstance.approve(routerAddress, approvalAmountWei).send(network.gasOptions());
+      console.log(`Status: ${result.status} - tx status: ${result.transaction.txStatus} - tx hash: ${result.transaction.receipt.transactionHash}\n`);
+    }
   }
+  
+  divider(true);
 }
 
 async function addLiquidity() {
-  console.log(`Adding liquidity for tokens ${tokenAAddress} (amount: ${argv.amounta}) / ${tokenBAddress} (amount: ${argv.amountb}) to router ${routerAddress} ...`);
-  let result = await routerInstance.addLiquidity(tokenAAddress, tokenBAddress, amountADesired, amountBDesired, amountAMinimum, amountBMinimum, walletAddress, deadlineFromNow).send(network.gasOptions());
-  console.log(`Status: ${result.status} - tx status: ${result.transaction.txStatus} - tx hash: ${result.transaction.receipt.transactionHash}\n`);
+  let result = null;
+  
+  if (tokenAAddressIsONE || tokenBAddressIsONE) {
+    let tokenAddress, amountTokenDesired, amountTokenMin, amountETHDesired, amountETHMin;
+
+    if (tokenAAddressIsONE) {
+      tokenAddress = tokenBAddress;
+      amountTokenDesired = amountBDesired;
+      amountTokenMin = amountBMinimum;
+      amountETHDesired = amountADesired;
+      amountETHMin = amountAMinimum;
+    } else if (tokenBAddressIsONE) {
+      tokenAddress = tokenAAddress;
+      amountTokenDesired = amountADesired;
+      amountTokenMin = amountAMinimum;
+      amountETHDesired = amountBDesired;
+      amountETHMin = amountBMinimum;
+    }
+
+    await woneStatus();
+
+    console.log(`Adding liquidity for token ${tokenAddress} (amount: ${web3.utils.fromWei(amountTokenDesired)}) / ONE (amount: ${web3.utils.fromWei(amountETHMin)}) using router ${routerAddress} ...`);
+    result = await routerInstance.addLiquidityETH(tokenAddress, amountTokenDesired, amountTokenMin, amountETHMin, walletAddress, deadlineFromNow).send({value: amountETHDesired, ...network.gasOptions()});
+
+  } else {
+    console.log(`Adding liquidity for tokens ${tokenAAddress} (amount: ${argv.amounta}) / ${tokenBAddress} (amount: ${argv.amountb}) using router ${routerAddress} ...`);
+    result = await routerInstance.addLiquidity(tokenAAddress, tokenBAddress, amountADesired, amountBDesired, amountAMinimum, amountBMinimum, walletAddress, deadlineFromNow).send(network.gasOptions());
+  }
+
+  if (result) {
+    console.log(`Status: ${result.status} - tx status: ${result.transaction.txStatus} - tx hash: ${result.transaction.receipt.transactionHash}\n`);
+  }
+
+  divider(true);
 }
 
 async function generateAddress() {
@@ -172,6 +274,39 @@ async function generateAddress() {
     let pairAddress = await routerInstance.pairAddressFor(factoryAddress, tokenAAddress, tokenBAddress).call(network.gasOptions());
     console.log(`Solidity/UniswapV2Router02->pairAddressFor: The generated pair address for the token pair ${tokenAAddress} / ${tokenBAddress} is: ${pairAddress}\n`);
   }
+
+  divider(true);
+}
+
+function isONE(contractAddress) {
+  switch (contractAddress.toLowerCase()) {
+    case 'one':
+    case 'wone':
+      return true;
+
+    default:
+      return false;
+  }
+}
+
+function stringDate(epoch) {
+  var utcEta = new Date(0);
+  utcEta.setUTCSeconds(epoch);
+  
+  return utcEta.toUTCString();
+}
+
+async function woneStatus() {
+  console.log(`wONE contract address: ${woneAddress}\n`);
+
+  let res = await network.client.blockchain.getBalance({address: walletAddress});
+  let balance = hexToNumber(res.result);
+  console.log(`ONE Balance for address ${walletAddress} (${walletAddressBech32}) is: ${web3.utils.fromWei(balance)} ONE\n`);
+
+  let balanceOf = await woneInstance.balanceOf(walletAddress).call(network.gasOptions());
+  console.log(`wONE Balance for address ${walletAddress} (${walletAddressBech32}) is: ${web3.utils.fromWei(balanceOf)} wONE\n`);
+
+  divider(true);
 }
 
 status().then(() => {

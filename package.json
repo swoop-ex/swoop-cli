@@ -7,7 +7,7 @@
     "@harmony-js/core": "^0.1.55",
     "@harmony-swoop/core": "^1.2.0",
     "@harmony-swoop/periphery": "^1.1.5",
-    "@harmony-swoop/sdk": "^1.0.7",
+    "@harmony-swoop/sdk": "^1.0.9",
     "@harmony-swoop/misc": "^1.0.1",
     "@harmony-swoop/utils": "^1.0.4",
     "@harmony-swoop/default-token-list": "^1.0.1",
