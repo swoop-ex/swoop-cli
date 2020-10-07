@@ -44,7 +44,7 @@ const { hexToNumber} = require('@harmony-js/utils');
 const network = new NetworkEnv(argv.network);
 const amount = web3.utils.toWei(amountString);
 
-const tokenContract = network.loadContract('@harmony-swoop/misc/build/contracts/WONE.json', tokenAddress, 'tester');
+const tokenContract = network.loadContract('@harmony-swoop/misc/build/contracts/WONE.json', tokenAddress, 'deployer');
 const tokenInstance = tokenContract.methods;
 const oneTokenAddress = toBech32(tokenAddress);
 
