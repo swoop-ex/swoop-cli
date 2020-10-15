@@ -47,11 +47,11 @@ if (tokenBAddress == null || tokenBAddress == '') {
 
 // Libs
 const web3 = require('web3');
-const { NetworkEnv } = require("@harmony-swoop/utils");
+const { HmyEnv} = require("@harmony-swoop/utils");
 const { getAddress } = require("@harmony-js/crypto");
 
 // Vars
-const network = new NetworkEnv(argv.network);
+const network = new HmyEnv(argv.network);
 
 const factoryContract = network.loadContract('@harmony-swoop/core/build/contracts/UniswapV2Factory.json', factoryAddress, 'deployer');
 const factoryInstance = factoryContract.methods;

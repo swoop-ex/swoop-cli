@@ -1,0 +1,115 @@
+// Args
+const yargs = require('yargs');
+const argv = yargs
+    .option('network', {
+      alias: 'n',
+      description: 'Which network to use',
+      type: 'string',
+      default: 'testnet'
+    })
+    .option('token', {
+      alias: 't',
+      description: 'What token to interact with',
+      type: 'string'
+    })
+    .option('amount', {
+      alias: 'a',
+      description: 'The amount of tokens to send',
+      type: 'string',
+      default: '1'
+    })
+    .help()
+    .alias('help', 'h')
+    .argv;
+
+let tokenName = argv.token;
+let amountString = argv.amount;
+
+if (tokenName == null || tokenName == '') {
+  console.log('You must supply a token using --token TOKEN_NAME or -c TOKEN_NAME!');
+  process.exit(0);
+}
+
+if (amountString == null || amountString == '') {
+  console.log('You must supply the amount to transfer using --amount AMOUNT or -a AMOUNT! Amount is a normal number - not wei');
+  process.exit(0);
+}
+
+// Libs
+const web3 = require('web3');
+const { HmyEnv} = require("@harmony-swoop/utils");
+const { toBech32 } = require("@harmony-js/crypto");
+
+// Vars
+tokenName = tokenName.replace(/^1/i, 'One')
+
+const network = new HmyEnv(argv.network);
+const amount = web3.utils.toWei(amountString);
+const tokens = parseTokens(tokenName);
+
+function parseTokens(name) {
+  var tokens = [];
+  name = name.toLowerCase();
+  const tokenList = require('@harmony-swoop/default-token-list');
+  
+  const matchingTokens = tokenList.tokens.filter(function(token) {
+    return token.chainId == network.chainId;
+  });
+
+  if (matchingTokens == null || matchingTokens.length == 0) {
+    console.log(`Couldn't find any tokens matching the chainId ${network.chainId} using the default token list...`);
+    process.exit(0);
+  }
+
+  if (name == 'all') {
+    tokens = matchingTokens;
+  } else {
+    let matchingTokensByName = matchingTokens.filter(function(token) {
+      return token.name.toLowerCase() == name.toLowerCase();
+    });
+  
+    if (matchingTokensByName == null || matchingTokensByName.length == 0) {
+      console.log(`Couldn't find any tokens matching the name ${tokenName} ...`);
+      process.exit(0);
+    }
+
+    tokens = matchingTokensByName;
+  }
+
+  return tokens;
+}
+
+async function mint() {
+  for(let token of tokens) {
+    const tokenAddress = token.address;
+    const oneTokenAddress = toBech32(tokenAddress);
+
+    const tokenContract = network.loadContract(`@harmony-swoop/misc/build/contracts/${token.name}.json`, tokenAddress, 'deployer');
+    const tokenInstance = tokenContract.methods;
+
+    const walletAddress = tokenContract.wallet.signer.address;
+
+    await totalSupply(tokenInstance, token, tokenAddress, oneTokenAddress);
+
+    console.log(`Attempting to mint ${amountString} ${token.name} tokens ...`);
+    let result = await tokenInstance.mint(walletAddress, amount).send(network.gasOptions());
+    let txHash = result.transaction.receipt.transactionHash;
+    console.log(`Minted ${amountString} ${token.name} tokens, tx hash: ${txHash}\n`);
+
+    await totalSupply(tokenInstance, token, tokenAddress, oneTokenAddress);
+  }
+}
+
+async function totalSupply(tokenInstance, token, tokenAddress, oneTokenAddress) {
+  let total = await tokenInstance.totalSupply().call(network.gasOptions());
+  let formattedTotal = web3.utils.fromWei(total);
+  console.log(`Current total supply for the token ${token.name} (address: ${oneTokenAddress} / ${tokenAddress}) is: ${formattedTotal}\n`);
+}
+
+mint().then(() => {
+  process.exit(0);
+})
+.catch(function(err){
+  console.log(err);
+  process.exit(0);
+});
