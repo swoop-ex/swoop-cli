@@ -64,46 +64,15 @@ const { hexToNumber} = require('@harmony-js/utils');
 const { Account } = require("@harmony-js/account");
 const { TransactionFactory } = require('@harmony-js/transaction');
 const { Unit } = require('@harmony-js/utils');
+const { parseTokens } = require("../shared/parseTokens");
 
 // Vars
 tokenName = tokenName.replace(/^1/i, 'One')
 
 const network = new HmyEnv(argv.network);
 const amount = web3.utils.toWei(amountString);
-const tokens = parseTokens(tokenName);
+const tokens = parseTokens(network, tokenName);
 const factory = new TransactionFactory();
-
-function parseTokens(name) {
-  var tokens = [];
-  name = name.toLowerCase();
-  const tokenList = require('@harmony-swoop/default-token-list');
-  
-  const matchingTokens = tokenList.tokens.filter(function(token) {
-    return token.chainId == network.chainId;
-  });
-
-  if (matchingTokens == null || matchingTokens.length == 0) {
-    console.log(`Couldn't find any tokens matching the chainId ${network.chainId} using the default token list...`);
-    process.exit(0);
-  }
-
-  if (name == 'all') {
-    tokens = matchingTokens;
-  } else {
-    let matchingTokensByName = matchingTokens.filter(function(token) {
-      return token.name.toLowerCase() == name.toLowerCase();
-    });
-  
-    if (matchingTokensByName == null || matchingTokensByName.length == 0) {
-      console.log(`Couldn't find any tokens matching the name ${tokenName} ...`);
-      process.exit(0);
-    }
-
-    tokens = matchingTokensByName;
-  }
-
-  return tokens;
-}
 
 async function send() {
 

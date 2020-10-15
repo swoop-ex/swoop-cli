@@ -361,9 +361,9 @@
   integrity sha512-sgI8oFZAT2FhUJIZbpuGbXyhbNZxuPS8nO7UEoXlo4bT4mvGonfEQxnM840Y7YAFXeedcNXV6l+ow/Ohvx6O+Q==
 
 "@harmony-swoop/default-token-list@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@harmony-swoop/default-token-list/-/default-token-list-1.0.1.tgz#7be48ee6804fb99d0c664e9457ce1be77f665cc1"
-  integrity sha512-XrQesB5jKcMAN8gTg8qTrNcRZn3KuYpRhjAGlTQ+LzrUqXc7wPPKom6vo2Rr1uxcYZuDDUtdUMXx43YKk5kZDw==
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@harmony-swoop/default-token-list/-/default-token-list-1.0.2.tgz#5516a7698dea6c49f49dfd0a7dd2e904b9dcd857"
+  integrity sha512-pkCnPRdlWqdf+XCNQbgvZd/OiG1fvsFzd413DK0TQm1P1/D4S9Y13hnGyItGz1ExUEOjnaudSISYXYuNI5yI2A==
 
 "@harmony-swoop/misc@^1.0.1":
   version "1.0.1"
@@ -389,10 +389,10 @@
     tiny-warning "^1.0.3"
     toformat "^2.0.0"
 
-"@harmony-swoop/utils@^1.0.8":
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/@harmony-swoop/utils/-/utils-1.0.8.tgz#efb3f02296a33bc020a8eeadee65a8712be51182"
-  integrity sha512-jMIyBqPXF7wRG9PViZKKeO8frc3BtZ3y8m79ysxmYDsYVFLC512YI8UJuUtOC4GIK03S8DoERBWu0Qwgbvw9XQ==
+"@harmony-swoop/utils@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@harmony-swoop/utils/-/utils-1.1.0.tgz#98ad548134e8e135c5d773f06238960763960f86"
+  integrity sha512-83RCOwE1qSAivto7lM83sEbKDF0wVQ3UXW19019Vx9vKz+jTs8WzGdneV2xAoe2vWPY2KlT7Zp6Qf2gNRe3tyA==
 
 "@sindresorhus/is@^0.14.0":
   version "0.14.0"
