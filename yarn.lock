@@ -389,10 +389,10 @@
     tiny-warning "^1.0.3"
     toformat "^2.0.0"
 
-"@harmony-swoop/utils@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@harmony-swoop/utils/-/utils-1.1.0.tgz#98ad548134e8e135c5d773f06238960763960f86"
-  integrity sha512-83RCOwE1qSAivto7lM83sEbKDF0wVQ3UXW19019Vx9vKz+jTs8WzGdneV2xAoe2vWPY2KlT7Zp6Qf2gNRe3tyA==
+"@harmony-swoop/utils@^1.1.2":
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/@harmony-swoop/utils/-/utils-1.1.2.tgz#3b206800f8b0aabe1b571ca89f07ee82bd6e99ca"
+  integrity sha512-BxHAbGBnPM3kWqVu6aKvN2KUY0KtbfaUGSdB5pT+iHROsyu3dtQqfubieD+M1e806s9vLBoEZxoN4G5u/2aBCQ==
 
 "@sindresorhus/is@^0.14.0":
   version "0.14.0"

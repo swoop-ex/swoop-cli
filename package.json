@@ -9,7 +9,7 @@
     "@harmony-swoop/periphery": "^1.1.5",
     "@harmony-swoop/sdk": "^1.0.9",
     "@harmony-swoop/misc": "^1.0.1",
-    "@harmony-swoop/utils": "^1.1.0",
+    "@harmony-swoop/utils": "^1.1.2",
     "@harmony-swoop/default-token-list": "^1.0.1",
     "@ethersproject/address": "^5.0.2",
     "@ethersproject/contracts": "^5.0.2",
