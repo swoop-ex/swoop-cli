@@ -76,7 +76,7 @@ if (tokenBAddress == null || tokenBAddress == '') {
 
 // Libs
 const web3 = require('web3');
-const { NetworkEnv } = require("@harmony-swoop/utils");
+const { HmyEnv} = require("@harmony-swoop/utils");
 const { getAddress: hmyGetAddress } = require("@harmony-js/crypto");
 const { hexToNumber} = require('@harmony-js/utils');
 
@@ -84,7 +84,7 @@ const { Pair, Token, WONE } = require("@harmony-swoop/sdk");
 const { getAddress: ethGetAddress } = require("@ethersproject/address");
 
 // Vars
-const network = new NetworkEnv(argv.network);
+const network = new HmyEnv(argv.network);
 const woneAddress = ethGetAddress(WONE[network.chainId].address);
 
 routerAddress = ethGetAddress(routerAddress);
