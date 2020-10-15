@@ -39,45 +39,14 @@ if (amountString == null || amountString == '') {
 const web3 = require('web3');
 const { HmyEnv} = require("@harmony-swoop/utils");
 const { toBech32 } = require("@harmony-js/crypto");
+const { parseTokens } = require("../shared/parseTokens");
 
 // Vars
 tokenName = tokenName.replace(/^1/i, 'One')
 
 const network = new HmyEnv(argv.network);
 const amount = web3.utils.toWei(amountString);
-const tokens = parseTokens(tokenName);
-
-function parseTokens(name) {
-  var tokens = [];
-  name = name.toLowerCase();
-  const tokenList = require('@harmony-swoop/default-token-list');
-  
-  const matchingTokens = tokenList.tokens.filter(function(token) {
-    return token.chainId == network.chainId;
-  });
-
-  if (matchingTokens == null || matchingTokens.length == 0) {
-    console.log(`Couldn't find any tokens matching the chainId ${network.chainId} using the default token list...`);
-    process.exit(0);
-  }
-
-  if (name == 'all') {
-    tokens = matchingTokens;
-  } else {
-    let matchingTokensByName = matchingTokens.filter(function(token) {
-      return token.name.toLowerCase() == name.toLowerCase();
-    });
-  
-    if (matchingTokensByName == null || matchingTokensByName.length == 0) {
-      console.log(`Couldn't find any tokens matching the name ${tokenName} ...`);
-      process.exit(0);
-    }
-
-    tokens = matchingTokensByName;
-  }
-
-  return tokens;
-}
+const tokens = parseTokens(network, tokenName);
 
 async function mint() {
   for(let token of tokens) {
