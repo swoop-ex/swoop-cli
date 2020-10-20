@@ -76,11 +76,11 @@ if (tokenBAddress == null || tokenBAddress == '') {
 
 // Libs
 const web3 = require('web3');
-const { HmyEnv} = require("@harmony-swoop/utils");
+const { HmyEnv} = require("@swoop-exchange/utils");
 const { getAddress: hmyGetAddress } = require("@harmony-js/crypto");
 const { hexToNumber} = require('@harmony-js/utils');
 
-const { Pair, Token, WONE } = require("@harmony-swoop/sdk");
+const { Pair, Token, WONE } = require("@swoop-exchange/sdk");
 const { getAddress: ethGetAddress } = require("@ethersproject/address");
 
 // Vars
@@ -106,10 +106,10 @@ const deadline = 100000;
 const dateNow = Math.ceil(Date.now() / 1000);
 const deadlineFromNow = dateNow + deadline
 
-const routerContract = network.loadContract('@harmony-swoop/periphery/build/contracts/UniswapV2Router02.json', routerAddress, 'deployer');
+const routerContract = network.loadContract('@swoop-exchange/periphery/build/contracts/UniswapV2Router02.json', routerAddress, 'deployer');
 const routerInstance = routerContract.methods;
 
-const woneContract = network.loadContract('@harmony-swoop/misc/build/contracts/WONE.json', woneAddress, 'deployer');
+const woneContract = network.loadContract('@swoop-exchange/misc/build/contracts/WONE.json', woneAddress, 'deployer');
 const woneInstance = woneContract.methods;
 
 const walletAddress = routerContract.wallet.signer.address;
@@ -128,7 +128,7 @@ async function status() {
   let factoryAddress = await routerInstance.factory().call(network.gasOptions());
   console.log(`The factory address for the router ${routerAddress} is: ${factoryAddress}\n`)
 
-  const factoryContract = network.loadContract('@harmony-swoop/core/build/contracts/UniswapV2Factory.json', factoryAddress, 'deployer');
+  const factoryContract = network.loadContract('@swoop-exchange/core/build/contracts/UniswapV2Factory.json', factoryAddress, 'deployer');
   const factoryInstance = factoryContract.methods;
 
   let length = await factoryInstance.allPairsLength().call(network.gasOptions());
@@ -141,7 +141,7 @@ async function status() {
   if (pairAddress === '0x0000000000000000000000000000000000000000') {
     console.log(`The pair ${tokenAAddress} / ${tokenBAddress} doesn't exist yet!\n`);
   } else {
-    let pairContract = network.loadContract('@harmony-swoop/core/build/contracts/UniswapV2Pair.json', pairAddress, 'deployer');
+    let pairContract = network.loadContract('@swoop-exchange/core/build/contracts/UniswapV2Pair.json', pairAddress, 'deployer');
     let pairInstance = pairContract.methods;
 
     let name = await pairInstance.name().call(network.gasOptions());
@@ -185,7 +185,7 @@ async function createPair() {
   let factoryAddress = await routerInstance.factory().call(network.gasOptions());
   console.log(`The factory address for the router ${routerAddress} is: ${factoryAddress}\n`)
 
-  const factoryContract = network.loadContract('@harmony-swoop/core/build/contracts/UniswapV2Factory.json', factoryAddress, 'deployer');
+  const factoryContract = network.loadContract('@swoop-exchange/core/build/contracts/UniswapV2Factory.json', factoryAddress, 'deployer');
   const factoryInstance = factoryContract.methods;
 
   console.log(`Creating a new pair using tokens ${tokenAAddress} / ${tokenBAddress} ...`);
@@ -201,7 +201,7 @@ async function approvals() {
   const approvalAmountWei = web3.utils.toWei(approvalAmount);
   
   for (const address of approveFor) {
-    const erc20Contract = network.loadContract('@harmony-swoop/periphery/build/contracts/IERC20.json', address, 'deployer');
+    const erc20Contract = network.loadContract('@swoop-exchange/periphery/build/contracts/IERC20.json', address, 'deployer');
     const erc20ContractInstance = erc20Contract.methods;
 
     let balance = await erc20ContractInstance.balanceOf(walletAddress).call(network.gasOptions());

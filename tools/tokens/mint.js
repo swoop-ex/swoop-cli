@@ -37,7 +37,7 @@ if (amountString == null || amountString == '') {
 
 // Libs
 const web3 = require('web3');
-const { HmyEnv} = require("@harmony-swoop/utils");
+const { HmyEnv} = require("@swoop-exchange/utils");
 const { toBech32 } = require("@harmony-js/crypto");
 const { parseTokens } = require("../shared/parseTokens");
 
@@ -53,7 +53,7 @@ async function mint() {
     const tokenAddress = token.address;
     const oneTokenAddress = toBech32(tokenAddress);
 
-    const tokenContract = network.loadContract(`@harmony-swoop/misc/build/contracts/${token.name}.json`, tokenAddress, 'deployer');
+    const tokenContract = network.loadContract(`@swoop-exchange/misc/build/contracts/${token.name}.json`, tokenAddress, 'deployer');
     const tokenInstance = tokenContract.methods;
 
     const walletAddress = tokenContract.wallet.signer.address;
