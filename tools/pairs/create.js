@@ -47,19 +47,19 @@ if (tokenBAddress == null || tokenBAddress == '') {
 
 // Libs
 const web3 = require('web3');
-const { HmyEnv} = require("@harmony-swoop/utils");
+const { HmyEnv} = require("@swoop-exchange/utils");
 const { getAddress } = require("@harmony-js/crypto");
 
 // Vars
 const network = new HmyEnv(argv.network);
 
-const factoryContract = network.loadContract('@harmony-swoop/core/build/contracts/UniswapV2Factory.json', factoryAddress, 'deployer');
+const factoryContract = network.loadContract('@swoop-exchange/core/build/contracts/UniswapV2Factory.json', factoryAddress, 'deployer');
 const factoryInstance = factoryContract.methods;
 
-/*const tokenAContract = network.loadContract('@harmony-swoop/core/build/contracts/HRC20.json', tokenAAddress, 'deployer');
+/*const tokenAContract = network.loadContract('@swoop-exchange/core/build/contracts/HRC20.json', tokenAAddress, 'deployer');
 const tokenAInstance = tokenContract.methods;
 
-const tokenBContract = network.loadContract('@harmony-swoop/core/build/contracts/HRC20.json', tokenBAddress, 'deployer');
+const tokenBContract = network.loadContract('@swoop-exchange/core/build/contracts/HRC20.json', tokenBAddress, 'deployer');
 const tokenBInstance = tokenContract.methods;*/
 
 const walletAddress = factoryContract.wallet.signer.address;

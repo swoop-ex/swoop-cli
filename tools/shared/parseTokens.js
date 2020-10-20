@@ -1,7 +1,7 @@
 exports.parseTokens = (network, name) => {
   var tokens = [];
   name = name.toLowerCase();
-  const tokenList = require('@harmony-swoop/default-token-list');
+  const tokenList = require('@swoop-exchange/default-token-list');
   
   const matchingTokens = tokenList.tokens.filter(function(token) {
     return token.chainId == network.chainId;

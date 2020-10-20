@@ -36,7 +36,7 @@ if (amountString == null || amountString == '') {
 
 // Libs
 const web3 = require('web3');
-const { HmyEnv} = require("@harmony-swoop/utils");
+const { HmyEnv} = require("@swoop-exchange/utils");
 const { toBech32 } = require("@harmony-js/crypto");
 const { hexToNumber} = require('@harmony-js/utils');
 
@@ -44,7 +44,7 @@ const { hexToNumber} = require('@harmony-js/utils');
 const network = new HmyEnv(argv.network);
 const amount = web3.utils.toWei(amountString);
 
-const tokenContract = network.loadContract('@harmony-swoop/misc/build/contracts/WONE.json', tokenAddress, 'deployer');
+const tokenContract = network.loadContract('@swoop-exchange/misc/build/contracts/WONE.json', tokenAddress, 'deployer');
 const tokenInstance = tokenContract.methods;
 const oneTokenAddress = toBech32(tokenAddress);
 

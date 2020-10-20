@@ -57,7 +57,7 @@ if (amountString == null || amountString == '') {
 
 // Libs
 const web3 = require('web3');
-const { HmyEnv} = require("@harmony-swoop/utils");
+const { HmyEnv} = require("@swoop-exchange/utils");
 const { fromBech32, toBech32 } = require("@harmony-js/crypto");
 const { isBech32Address } = require("@harmony-js/utils");
 const { hexToNumber} = require('@harmony-js/utils');
@@ -86,11 +86,21 @@ async function send() {
       oneToAddress = toBech32(toAddress);
     }
 
+    console.log(`Checking ONE balance for address: ${oneToAddress} (${toAddress})`);
+    let res = await network.client.blockchain.getBalance({address: toAddress});
+    let balance = hexToNumber(res.result);
+    console.log(`ONE Balance for address ${oneToAddress} (${toAddress}) is: ${web3.utils.fromWei(balance)} ONE\n`);
+
+    if (oneAmountString && oneAmountString !== '') {
+      console.log(`Sending ${oneAmountString} ONE to: ${oneToAddress} (${toAddress})`);
+      await oneTransfer(oneToAddress)
+    }
+
     for(let token of tokens) {
       const tokenAddress = token.address;
       const oneTokenAddress = toBech32(tokenAddress);
   
-      const tokenContract = network.loadContract(`@harmony-swoop/misc/build/contracts/${token.name}.json`, tokenAddress, 'deployer');
+      const tokenContract = network.loadContract(`@swoop-exchange/misc/build/contracts/${token.name}.json`, tokenAddress, 'deployer');
       const tokenInstance = tokenContract.methods;
       
       const walletAddress = tokenContract.wallet.signer.address;
@@ -99,16 +109,6 @@ async function send() {
       let total = await tokenInstance.totalSupply().call(network.gasOptions());
       let formattedTotal = web3.utils.fromWei(total);
       console.log(`Current total supply for the token ${token.name} (address: ${oneTokenAddress} / ${tokenAddress}) is: ${formattedTotal}\n`);
-    
-      console.log(`Checking ONE balance for address: ${oneWalletAddress} (${walletAddress})`);
-      let res = await network.client.blockchain.getBalance({address: oneWalletAddress});
-      let balance = hexToNumber(res.result);
-      console.log(`ONE Balance for address ${oneWalletAddress} (${walletAddress}) is: ${web3.utils.fromWei(balance)} ONE\n`);
-
-      if (oneAmountString && oneAmountString !== '') {
-        console.log(`Sending ${oneAmountString} ONE from ${oneWalletAddress} (${walletAddress}) to: ${oneToAddress} (${toAddress})`);
-        await oneTransfer(oneToAddress)
-      }
 
       await tokenBalance(tokenInstance, token, walletAddress, oneWalletAddress);
     
