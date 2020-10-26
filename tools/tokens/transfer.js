@@ -64,7 +64,7 @@ const { hexToNumber} = require('@harmony-js/utils');
 const { Account } = require("@harmony-js/account");
 const { TransactionFactory } = require('@harmony-js/transaction');
 const { Unit } = require('@harmony-js/utils');
-const { parseTokens } = require("../shared/parseTokens");
+const { parseTokens } = require("../shared/tokens");
 
 // Vars
 tokenName = tokenName.replace(/^1/i, 'One')

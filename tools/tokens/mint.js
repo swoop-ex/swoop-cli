@@ -39,7 +39,7 @@ if (amountString == null || amountString == '') {
 const web3 = require('web3');
 const { HmyEnv} = require("@swoop-exchange/utils");
 const { toBech32 } = require("@harmony-js/crypto");
-const { parseTokens } = require("../shared/parseTokens");
+const { parseTokens } = require("../shared/tokens");
 
 // Vars
 tokenName = tokenName.replace(/^1/i, 'One')
