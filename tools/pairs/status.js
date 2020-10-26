@@ -37,7 +37,7 @@ if (argv.pair != null && argv.pair != '' && argv.pair.includes('/')) {
 const web3 = require('web3');
 const { HmyEnv} = require("@swoop-exchange/utils");
 const { getAddress } = require("@harmony-js/crypto");
-const { parseTokens } = require("../shared/parseTokens");
+const { parseTokens } = require("../shared/tokens");
 const { Pair, Token } = require ("@swoop-exchange/sdk")
 
 // Vars
