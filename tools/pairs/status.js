@@ -38,6 +38,7 @@ const web3 = require('web3');
 const { HmyEnv} = require("@swoop-exchange/utils");
 const { getAddress } = require("@harmony-js/crypto");
 const { parseTokens } = require("../shared/parseTokens");
+const { Pair, Token } = require ("@swoop-exchange/sdk")
 
 // Vars
 const network = new HmyEnv(argv.network);
@@ -63,11 +64,11 @@ async function status() {
     const tokenASymbol = pair[0];
     const tokenBSymbol = pair[1];
 
-    console.log(tokenASymbol)
-    console.log(tokenBSymbol)
-
     const tokenAAddress = findToken(tokens, tokenASymbol);
     const tokenBAddress = findToken(tokens, tokenBSymbol);
+    const expectedAddress = generatedPairAddress(tokenAAddress, tokenBAddress);
+
+    console.log(`Expected pair address for the token pair ${tokenAAddress} / ${tokenBAddress} by the SDK is: ${expectedAddress}`);
 
     console.log(`Fetching pair address for the token pair ${tokenAAddress} / ${tokenBAddress} ...`);
     let pairAddress = await factoryInstance.getPair(tokenAAddress, tokenBAddress).call(network.gasOptions());
@@ -92,6 +93,15 @@ function findToken(tokens, name) {
   const address = (matches && matches.length == 1) ? matches[0].address : null;
 
   return address;
+}
+
+function generatedPairAddress(addressA, addressB) {
+  const tokenA = new Token(network.chainId, addressA, 18);
+  const tokenB = new Token(network.chainId, addressB, 18);
+
+  const expectedAddress = Pair.getAddress(tokenA, tokenB);
+
+  return expectedAddress;
 }
 
 status()
