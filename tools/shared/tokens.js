@@ -15,9 +15,7 @@ exports.parseTokens = (network, name) => {
   if (name == 'all') {
     tokens = matchingTokens;
   } else {
-    let matchingTokensByName = matchingTokens.filter(function(token) {
-      return token.name.toLowerCase() == name.toLowerCase();
-    });
+    let matchingTokensByName = findTokenBy(matchingTokens, 'name', name);
   
     if (matchingTokensByName == null || matchingTokensByName.length == 0) {
       console.log(`Couldn't find any tokens matching the name ${tokenName} ...`);
@@ -32,4 +30,14 @@ exports.parseTokens = (network, name) => {
   });
 
   return filteredTokens;
+}
+
+exports.findTokenBy = (tokens, key, value) => {
+  let matches = tokens.filter(function(token) {
+    return token[key].toLowerCase() == value.toLowerCase();
+  });
+
+  const token = (matches && matches.length == 1) ? matches[0] : null;
+
+  return token;
 }
