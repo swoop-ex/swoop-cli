@@ -46,11 +46,6 @@ const argv = yargs
       type: 'string',
       default: '1'
     })
-    .option('generate-onchain-address', {
-      alias: 'g',
-      description: 'Generate an address using on the onchain pairAddressFor function - requires a custom router contract.',
-      type: 'boolean',
-    })
     .help()
     .alias('help', 'h')
     .argv;
@@ -122,63 +117,6 @@ function divider(linebreak) {
   if (linebreak) {
     console.log('');
   }
-}
-
-async function status() {
-  let factoryAddress = await routerInstance.factory().call(network.gasOptions());
-  console.log(`The factory address for the router ${routerAddress} is: ${factoryAddress}\n`)
-
-  const factoryContract = network.loadContract('@swoop-exchange/core/build/contracts/UniswapV2Factory.json', factoryAddress, 'deployer');
-  const factoryInstance = factoryContract.methods;
-
-  let length = await factoryInstance.allPairsLength().call(network.gasOptions());
-  console.log(`There is a total of ${length.toNumber()} pair(s) created by this factory\n`);
-
-  console.log(`Fetching pair address for the token pair ${tokenAAddress} / ${tokenBAddress} ...`);
-  let pairAddress = await factoryInstance.getPair(tokenAAddress, tokenBAddress).call(network.gasOptions());
-  console.log(`The pair address for the token pair ${tokenAAddress} / ${tokenBAddress} is: ${pairAddress}\n`);
-
-  if (pairAddress === '0x0000000000000000000000000000000000000000') {
-    console.log(`The pair ${tokenAAddress} / ${tokenBAddress} doesn't exist yet!\n`);
-  } else {
-    let pairContract = network.loadContract('@swoop-exchange/core/build/contracts/UniswapV2Pair.json', pairAddress, 'deployer');
-    let pairInstance = pairContract.methods;
-
-    let name = await pairInstance.name().call(network.gasOptions());
-    console.log(`The name for the token pair ${tokenAAddress} / ${tokenBAddress} is: ${name}\n`);
-
-    let symbol = await pairInstance.symbol().call(network.gasOptions());
-    console.log(`The symbol for the token pair ${tokenAAddress} / ${tokenBAddress} is: ${symbol}\n`);
-
-    let decimals = await pairInstance.decimals().call(network.gasOptions());
-    console.log(`The decimals for the token pair ${tokenAAddress} / ${tokenBAddress} is: ${decimals}\n`);
-
-    let totalSupply = await pairInstance.totalSupply().call(network.gasOptions());
-    console.log(`The total supply for the token pair ${tokenAAddress} / ${tokenBAddress} is: ${web3.utils.fromWei(totalSupply)}\n`);
-
-    let minimumLiquidity = await pairInstance.MINIMUM_LIQUIDITY().call(network.gasOptions());
-    console.log(`The minimum liqudity for the token pair ${tokenAAddress} / ${tokenBAddress} is: ${minimumLiquidity}\n`);
-
-    let factory = await pairInstance.factory().call(network.gasOptions());
-    console.log(`The factory address for the token pair ${tokenAAddress} / ${tokenBAddress} is: ${factory}\n`);
-
-    let token0 = await pairInstance.token0().call(network.gasOptions());
-    console.log(`The token0 address for the token pair ${tokenAAddress} / ${tokenBAddress} is: ${token0}\n`);
-
-    let token1 = await pairInstance.token1().call(network.gasOptions());
-    console.log(`The token1 address for the token pair ${tokenAAddress} / ${tokenBAddress} is: ${token1}\n`);
-
-    let reserves = await pairInstance.getReserves().call(network.gasOptions());
-    let timestamp = hexToNumber('0x'+reserves['_blockTimestampLast']);
-    let dateTime = (timestamp > 0) ? stringDate(timestamp) : '';
-
-    console.log(`The reserves for the token pair ${tokenAAddress} / ${tokenBAddress} is:`);
-    console.log(`  Reserve 0: ${reserves['_reserve0']}`);
-    console.log(`  Reserve 1: ${reserves['_reserve1']}`);
-    console.log(`  BlockTimestampLast: ${dateTime} (${timestamp})\n`);
-  }
-
-  divider(true);
 }
 
 async function createPair() {
@@ -266,15 +204,6 @@ async function generateAddress() {
 
   console.log(`Javascript/Swoop SDK: The generated pair address for the token pair ${tokenAAddress} / ${tokenBAddress} is: ${pairAddress}\n`);
 
-  if (argv['generate-onchain-address']) {
-    let factoryAddress = await routerInstance.factory().call(network.gasOptions());
-    console.log(`The factory address for the router ${routerAddress} is: ${factoryAddress}\n`)
-  
-    console.log(`Fetching calculated pair address for the token pair ${tokenAAddress} / ${tokenBAddress} ...`);
-    let pairAddress = await routerInstance.pairAddressFor(factoryAddress, tokenAAddress, tokenBAddress).call(network.gasOptions());
-    console.log(`Solidity/UniswapV2Router02->pairAddressFor: The generated pair address for the token pair ${tokenAAddress} / ${tokenBAddress} is: ${pairAddress}\n`);
-  }
-
   divider(true);
 }
 
@@ -287,13 +216,6 @@ function isONE(contractAddress) {
     default:
       return false;
   }
-}
-
-function stringDate(epoch) {
-  var utcEta = new Date(0);
-  utcEta.setUTCSeconds(epoch);
-  
-  return utcEta.toUTCString();
 }
 
 async function woneStatus() {
@@ -309,13 +231,11 @@ async function woneStatus() {
   divider(true);
 }
 
-status().then(() => {
-  approvals().then(() => {
-    addLiquidity().then(() => {
-      status().then(() => {
-        generateAddress().then(() => {
-          process.exit(0);
-        })
+approvals().then(() => {
+  addLiquidity().then(() => {
+    status().then(() => {
+      generateAddress().then(() => {
+        process.exit(0);
       })
     })
   })

@@ -37,8 +37,9 @@ if (argv.pair != null && argv.pair != '' && argv.pair.includes('/')) {
 const web3 = require('web3');
 const { HmyEnv} = require("@swoop-exchange/utils");
 const { getAddress } = require("@harmony-js/crypto");
-const { parseTokens } = require("../shared/tokens");
-const { Pair, Token } = require ("@swoop-exchange/sdk")
+const { parseTokens, findTokenBy } = require("../shared/tokens");
+const { Pair, Token } = require ("@swoop-exchange/sdk");
+const { hexToNumber} = require('@harmony-js/utils');
 
 // Vars
 const network = new HmyEnv(argv.network);
@@ -64,35 +65,70 @@ async function status() {
     const tokenASymbol = pair[0];
     const tokenBSymbol = pair[1];
 
-    const tokenAAddress = findToken(tokens, tokenASymbol);
-    const tokenBAddress = findToken(tokens, tokenBSymbol);
+    const tokenAAddress = findTokenBy(tokens, 'symbol', tokenASymbol).address;
+    const tokenBAddress = findTokenBy(tokens, 'symbol', tokenBSymbol).address;
     const expectedAddress = generatedPairAddress(tokenAAddress, tokenBAddress);
 
     console.log(`Expected pair address for the token pair ${tokenAAddress} / ${tokenBAddress} by the SDK is: ${expectedAddress}`);
 
     console.log(`Fetching pair address for the token pair ${tokenAAddress} / ${tokenBAddress} ...`);
-    let pairAddress = await factoryInstance.getPair(tokenAAddress, tokenBAddress).call(network.gasOptions());
+    var pairAddress = await factoryInstance.getPair(tokenAAddress, tokenBAddress).call(network.gasOptions());
     console.log(`The pair address for the token pair ${tokenAAddress} / ${tokenBAddress} is: ${pairAddress}\n`);
+
+    await pairDetails(pairAddress);
   } else {
     if (length > 0) {
       for (index = 0; index < length; index++) { 
         console.log(`Fetching pair address for the token pair via index ${index} ...`);
         pairAddress = await factoryInstance.allPairs(index).call(network.gasOptions());
         console.log(`The pair address for the token pair at index ${index} is: ${pairAddress}\n`);
+
+        await pairDetails(pairAddress);
       }
     }
   }
-
 }
 
-function findToken(tokens, name) {
-  let matches = tokens.filter(function(token) {
-    return token.symbol.toLowerCase() == name.toLowerCase();
-  });
+async function pairDetails(address) {
+  let pairContract = network.loadContract('@swoop-exchange/core/build/contracts/UniswapV2Pair.json', address, 'deployer');
+  let pairInstance = pairContract.methods;
 
-  const address = (matches && matches.length == 1) ? matches[0].address : null;
+  let name = await pairInstance.name().call(network.gasOptions());
+  console.log(`The name for the pair contract ${address} is: ${name}\n`);
 
-  return address;
+  let symbol = await pairInstance.symbol().call(network.gasOptions());
+  console.log(`The symbol for the pair contract ${address} is: ${symbol}\n`);
+
+  let decimals = await pairInstance.decimals().call(network.gasOptions());
+  console.log(`The decimals for the pair contract ${address} is: ${decimals}\n`);
+
+  let totalSupply = await pairInstance.totalSupply().call(network.gasOptions());
+  console.log(`The total supply for the pair contract ${address} is: ${web3.utils.fromWei(totalSupply)}\n`);
+
+  let minimumLiquidity = await pairInstance.MINIMUM_LIQUIDITY().call(network.gasOptions());
+  console.log(`The minimum liqudity for the pair contract ${address} is: ${web3.utils.fromWei(minimumLiquidity)}\n`);
+
+  let factory = await pairInstance.factory().call(network.gasOptions());
+  console.log(`The factory address for the pair contract ${address} is: ${factory}\n`);
+
+  let token0Address = await pairInstance.token0().call(network.gasOptions());
+  let token0 = findTokenBy(tokens, 'address', token0Address);
+  let token0Symbol = (token0) ? token0.symbol : '';
+  console.log(`The token0 address for the pair contract ${address} is: ${token0Address} - ${token0Symbol}\n`);
+
+  let token1Address = await pairInstance.token1().call(network.gasOptions());
+  let token1 = findTokenBy(tokens, 'address', token1Address);
+  let token1Symbol = (token1) ? token1.symbol : '';
+  console.log(`The token1 address for the pair contract ${address} is: ${token1Address} - ${token1Symbol}\n`);
+
+  let reserves = await pairInstance.getReserves().call(network.gasOptions());
+  let timestamp = hexToNumber('0x'+reserves['_blockTimestampLast']);
+  let dateTime = (timestamp > 0) ? stringDate(timestamp) : '';
+
+  console.log(`The reserves for the pair contract ${address} is:`);
+  console.log(`  Reserve 0: ${web3.utils.fromWei(reserves['_reserve0'])} - ${token0Symbol}`);
+  console.log(`  Reserve 1: ${web3.utils.fromWei(reserves['_reserve1'])} - ${token1Symbol}`);
+  console.log(`  BlockTimestampLast: ${dateTime} (${timestamp})\n`);
 }
 
 function generatedPairAddress(addressA, addressB) {
@@ -102,6 +138,13 @@ function generatedPairAddress(addressA, addressB) {
   const expectedAddress = Pair.getAddress(tokenA, tokenB);
 
   return expectedAddress;
+}
+
+function stringDate(epoch) {
+  var utcEta = new Date(0);
+  utcEta.setUTCSeconds(epoch);
+  
+  return utcEta.toUTCString();
 }
 
 status()
