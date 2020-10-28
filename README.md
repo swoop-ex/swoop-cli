@@ -46,12 +46,12 @@ node tools/tokens/wone.js --network $NETWORK --token $WONE --amount 1
 
 | Contract          | Testnet                                                                                 | Mainnet     |
 | ----------------- | --------------------------------------------------------------------------------------- | ----------- |
-| UniswapV2Factory  | 0xcde697ddd88e91c6eeda0952df09454999a12d5a (one1ehnf0hwc36gudmk6p9fd7z29fxv6zt26jesf3l) | 0x828ce51a57c58441d949d62c411961115dc60d4a (one1s2xw2xjhckzyrk2f6ckyzxtpz9wuvr228j4ypa) |
-| UniswapV2Router02 | 0x8346a5cfc632c1ee32e6fc2ab0e8de87974c69e7 (one1sdr2tn7xxtq7uvhxls4tp6x7s7t5c608juhu64) | 0x8f8beff9a5999ca8aed7e2617f50dd412254e7a5 (one13797l7d9nxw23tkhufsh75xagy39fea9ss6jzl) |
-| Multicall         | 0xd078799c53396616844e2fa97f0dd2b4c145a685 (one16pu8n8zn89npdpzw975h7rwjknq5tf59x7c5mj) | 0x34b415f4d3b332515e66f70595ace1dcf36254c5 (one1xj6ptaxnkve9zhnx7uzett8pmneky4x93z5f2g) |
-| WONE              | 0x807b8da767a712ec2f3ba6817981ea49d5f76b9b (one1spacmfm85ufwctem56qhnq02f82lw6um560m9q) | 0x4ea97f5bd0fd85e41a7172112a0b722592f5f183 (one1f65h7k7slkz7gxn3wggj5zmjykf0tuvrstn5e9) |
-| OneBUSD           | 0x4ca9b6c9b9136230ced960d86f20da0cb57de525 (one1fj5mdjdezd3rpnkevrvx7gx6pj6hmef9r9jwsz) | 0x19c65f26beee949c57d617dde51582e3f62ced67 (one1r8r97f47a62fc47kzlw729vzu0mzemt8hd9h06) |
-| OneBTC            | 0xd1d61befb4d89a370992f00776444e4b5bba58f5 (one168tphma5mzdrwzvj7qrhv3zwfddm5k84ullerk) | 0xd4da8c97f0a9133d52e469548a3dbe75defb182d (one16ndge9ls4yfn65hyd92g50d7wh00kxpdk6ykpy) |
-| OneETH            | 0x9740dfd28f028007eb3148cfe8427fde719f8496 (one1jaqdl550q2qq06e3fr87ssnlmecelpykrzqggu) | 0xec5806984d2a46124b2545250f5de4f2452e10b8 (one1a3vqdxzd9frpyje9g5js7h0y7fzjuy9cauv393) |
-| OneChainlink      | 0x2c87f9d953e8f299488b3a22541b041b5ea8da6a (one19jrlnk2narefjjyt8g39gxcyrd023kn2e02cx0) | 0x29cf7ac26f5ed55b9a2821a29796a7cdc64a063d (one1988h4sn0tm24hx3gyx3f0948ehry5p3ahfppgm) |
-| OneSeed           | 0x39328d607772e91a4beb889e88db2bda7c3159e4 (one18yeg6crhwt535jlt3z0g3ketmf7rzk0y8u69en) | 0xea0b36974872dbafd3766a38b40fa1e2d2881eff (one1ag9nd96gwtd6l5mkdgutgraputfgs8hlxx4ug7) |
+| UniswapV2Factory  | 0x3Da4cACC882c7c356b979327625fe57f7dA31c8F (one18kjv4nyg937r26uhjvnkyhl90a76x8y07mt2gl) | 0x3A3289aF62600bd7FF0811B546964F8C6a63dC72 (one18gegntmzvq9a0lcgzx65d9j0334x8hrjcs4ddr) |
+| UniswapV2Router02 | 0x15809f9a68b4e8350FAC0D5ae2F187A843252f60 (one1zkqflxngkn5r2ravp4dw9uv84ppj2tmqscfju7) | 0x5D7C4AcA7ae70F98e264ad4c040743bAe51cd27B (one1t47y4jn6uu8e3cny44xqgp6rhtj3e5nm30esz0) |
+| Multicall    | 0x4BAC6E1dAA31b877147e9465d73DCf823A54828C (one1fwkxu8d2xxu8w9r7j3jaw0w0sga9fq5v8gaecz) | 0xfaA0Aca7e9b9564fB33170946D3F48d4B7Db738D (one1l2s2eflfh9tylve3wz2x606g6jmakuud3fhcf2) |
+| WONE         | 0xF561b31d0c6f9c8b96a0Ee5DFADDaC9787Eaa70c (one174smx8gvd7wgh94qaewl4hdvj7r74fcvx8ry3p) | 0xF0e3E0218fD1C9C99f260E589935361fa07d7957 (one17r37qgv068yun8expevfjdfkr7s8672hn577vf) |
+| OneBUSD      | 0xe9994435727Ed3843aab293F330f64344da3CFa4 (one1axv5gdtj0mfcgw4t9ylnxrmyx3x68naysvpa9l) | 0x0D0207A709f5fd0e941595c8e2FcE85B9E9692Eb (one1p5pq0fcf7h7sa9q4jhyw9l8gtw0fdyht4yyrly) |
+| OneBTC       | 0xBD0Ac0197EA36F168891233356A420A9EdD98edB (one1h59vqxt75dh3dzy3yve4dfpq48kanrkmh98806) | 0xb66c57F215826FB072D465739E86C6B281D33Df1 (one1kek90us4sfhmquk5v4eeapkxk2qax003g3uzgj) |
+| OneETH       | 0x2dA47D9015ae48bC6A930FCF1EF59FAd556C2994 (one19kj8myq44eytc65npl83aavl442kc2v570dp88) | 0x341aE51C07Af9E418096aCB7EE513D7eCd1Ae5AA (one1xsdw28q8470yrqyk4jm7u5fa0mx34ed2ku5hr6) |
+| OneChainlink | 0xafc2FD683F3fbb3e4130a35019F3a5c1F2368E76 (one14lp066pl87anusfs5dgpnua9c8erdrnkt76hyk) | 0x99e23c2267CB5B736a3c2DB20Bc4F0C7354d7EB7 (one1n83rcgn8eddhx63u9keqh38scu656l4hdmztud) |
+| OneSeed      | 0x497a5Af3e37b19736C67A8CFeB1d2b9C3eb3E711 (one1f9a94ulr0vvhxmr84r87k8ftnslt8ec3uvw0ra) | 0x3d0412913036ed5D1da7D6B0895113e5c719aC10 (one185zp9yfsxmk468d866cgj5gnuhr3ntqs9vkhqy) |
