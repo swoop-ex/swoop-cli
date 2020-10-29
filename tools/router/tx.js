@@ -45,7 +45,7 @@ const network = new HmyEnv(argv.network);
 
 const factoryJson = require('@swoop-exchange/periphery/build/contracts/UniswapV2Router02.json');
 const factoryContract = network.client.contracts.createContract(factoryJson.abi, routerAddress);
-if (network.accounts['deployer']) {
+if (network.accounts && network.accounts['deployer'] && network.accounts['deployer'].privateKey) {
   factoryContract.wallet.addByPrivateKey(network.accounts['deployer'].privateKey);
 }
 
