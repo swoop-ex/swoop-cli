@@ -9,7 +9,7 @@
     "@swoop-exchange/periphery": "^1.0.1",
     "@swoop-exchange/sdk": "^1.1.8",
     "@swoop-exchange/misc": "^1.0.0",
-    "@swoop-exchange/utils": "^1.0.0",
+    "@swoop-exchange/utils": "=1.0.1",
     "@swoop-exchange/default-token-list": "^1.1.0",
     "@ethersproject/address": "^5.0.2",
     "@ethersproject/contracts": "^5.0.2",
