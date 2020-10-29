@@ -1,5 +1,9 @@
 # swoop-cli
 
+## Requirements
+
+Install package requirements: `yarn install`
+
 ## Tools
 
 ### Pairs
