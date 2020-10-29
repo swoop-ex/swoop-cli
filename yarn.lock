@@ -398,10 +398,10 @@
     tiny-warning "^1.0.3"
     toformat "^2.0.0"
 
-"@swoop-exchange/utils@^1.0.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@swoop-exchange/utils/-/utils-1.1.0.tgz#a11cf243e25708dcdd2667d18b074ccc9d617fe2"
-  integrity sha512-2Tgf96lTkyP3z1YhPDDGfQmRSXg52OUMpCYKHjGlF8y+C2vY9w7rQvcHAA06hUFbiOBYL+lLZQ+sjeSXqSqqFA==
+"@swoop-exchange/utils@=1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@swoop-exchange/utils/-/utils-1.0.1.tgz#89a090f91003e43f16fdc6f9f1e0ec6cd0cb6c74"
+  integrity sha512-o6MTPq9aU0N+sVuIjgVuVyCDsoUCmPc3t1d8yA8BoOnazprQ5OEACU+AEST3t7+p6ryFN74MwPnfW//oHL9gOQ==
 
 "@szmarczak/http-timer@^1.1.2":
   version "1.1.2"
