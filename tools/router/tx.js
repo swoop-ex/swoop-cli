@@ -42,7 +42,14 @@ const web3 = require('web3');
 
 // Vars
 const network = new HmyEnv(argv.network);
-const factoryContract = network.loadContract('@swoop-exchange/periphery/build/contracts/UniswapV2Router02.json', routerAddress, 'deployer');
+
+const factoryJson = require('@swoop-exchange/periphery/build/contracts/UniswapV2Router02.json');
+const factoryContract = network.client.contracts.createContract(factoryJson.abi, routerAddress);
+if (network.accounts && network.accounts['deployer'] && network.accounts['deployer'].privateKey) {
+  factoryContract.wallet.addByPrivateKey(network.accounts['deployer'].privateKey);
+}
+
+//const factoryContract = network.loadContract('@swoop-exchange/periphery/build/contracts/UniswapV2Router02.json', routerAddress, 'deployer');
 const tokens = parseTokens(network, 'all');
 
 async function status() {
