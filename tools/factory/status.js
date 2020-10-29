@@ -35,6 +35,7 @@ if (argv.pair != null && argv.pair != '' && argv.pair.includes('/')) {
 
 // Libs
 const web3 = require('web3');
+const { BigNumber } = require('@ethersproject/bignumber');
 const { HmyEnv} = require("@swoop-exchange/utils");
 const { getAddress } = require("@harmony-js/crypto");
 const { parseTokens, findTokenBy } = require("../shared/tokens");
@@ -58,6 +59,15 @@ const walletAddress = factoryContract.wallet.signer.address;
 const walletAddressBech32 = getAddress(walletAddress).bech32;
 
 async function status() {
+  console.log(`Factory info:`);
+  const feeTo = await factoryInstance.feeTo().call(network.gasOptions());
+  console.log(`feeTo is set to: ${feeTo}`);
+  
+  const feeToSetter = await factoryInstance.feeToSetter().call(network.gasOptions());
+  console.log(`feeToSetter is set to: ${feeToSetter}\n`);
+
+  console.log(`Pair info:`)
+
   const length = await factoryInstance.allPairsLength().call(network.gasOptions());
   console.log(`There is a total of ${length} pairs created by the factory ${factoryAddress} \n`);
 
@@ -108,26 +118,37 @@ async function pairDetails(address) {
   let minimumLiquidity = await pairInstance.MINIMUM_LIQUIDITY().call(network.gasOptions());
   console.log(`The minimum liqudity for the pair contract ${address} is: ${web3.utils.fromWei(minimumLiquidity)}\n`);
 
+  let liquidity = await pairInstance.balanceOf(address).call(network.gasOptions());
+  console.log(`The current liquidity for the pair contract ${address} is: ${web3.utils.fromWei(liquidity)}\n`);
+
   let factory = await pairInstance.factory().call(network.gasOptions());
   console.log(`The factory address for the pair contract ${address} is: ${factory}\n`);
 
   let token0Address = await pairInstance.token0().call(network.gasOptions());
   let token0 = findTokenBy(tokens, 'address', token0Address);
   let token0Symbol = (token0) ? token0.symbol : '';
-  console.log(`The token0 address for the pair contract ${address} is: ${token0Address} - ${token0Symbol}\n`);
+  let token0Contract = network.loadContract('@swoop-exchange/periphery/build/contracts/IERC20.json', token0Address, 'deployer');
+  let token0UnderlyingBalance = await token0Contract.methods.balanceOf(address).call(network.gasOptions())
+  console.log(`The token0 address for the pair contract ${address} is: ${token0Address} - ${token0Symbol}. Underlying balance: ${web3.utils.fromWei(token0UnderlyingBalance)} ${token0Symbol}\n`);
 
   let token1Address = await pairInstance.token1().call(network.gasOptions());
   let token1 = findTokenBy(tokens, 'address', token1Address);
   let token1Symbol = (token1) ? token1.symbol : '';
-  console.log(`The token1 address for the pair contract ${address} is: ${token1Address} - ${token1Symbol}\n`);
+  let token1Contract = network.loadContract('@swoop-exchange/periphery/build/contracts/IERC20.json', token1Address, 'deployer');
+  let token1UnderlyingBalance = await token1Contract.methods.balanceOf(address).call(network.gasOptions())
+  console.log(`The token1 address for the pair contract ${address} is: ${token1Address} - ${token1Symbol}. Underlying balance: ${web3.utils.fromWei(token1UnderlyingBalance)} ${token1Symbol}\n`);
 
   let reserves = await pairInstance.getReserves().call(network.gasOptions());
+  let reserve0 = reserves['_reserve0'];
+  let reserve1 = reserves['_reserve1'];
+  let totalReserves = BigNumber.from(reserve0).add(BigNumber.from(reserve1));
   let timestamp = hexToNumber('0x'+reserves['_blockTimestampLast']);
   let dateTime = (timestamp > 0) ? stringDate(timestamp) : '';
 
   console.log(`The reserves for the pair contract ${address} is:`);
-  console.log(`  Reserve 0: ${web3.utils.fromWei(reserves['_reserve0'])} - ${token0Symbol}`);
-  console.log(`  Reserve 1: ${web3.utils.fromWei(reserves['_reserve1'])} - ${token1Symbol}`);
+  console.log(`  Reserve 0: ${web3.utils.fromWei(reserve0)} - ${token0Symbol}`);
+  console.log(`  Reserve 1: ${web3.utils.fromWei(reserve1)} - ${token1Symbol}`);
+  console.log(`  Total reserves: ${web3.utils.fromWei(totalReserves.toString())}`);
   console.log(`  BlockTimestampLast: ${dateTime} (${timestamp})\n`);
 }
 
