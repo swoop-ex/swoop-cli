@@ -79,7 +79,10 @@ function outputInfo(decodedInput) {
       outputAddLiquidityETHInfo(decodedInput);
       break;
     case 'removeLiquidity':
-      outputRemoveLiquidity(decodedInput);
+      outputRemoveLiquidityInfo(decodedInput);
+      break;
+    case 'removeLiquidityETH':
+      outputRemoveLiquidityEthInfo(decodedInput);
       break;
   }
 }
@@ -114,7 +117,7 @@ function outputAddLiquidityETHInfo(decodedInput) {
   console.log(`Added Liquidity (method: 'addLiquidityETH') for ONE/wONE (amount mininum: ${amountETHMin}) and token ${tokenSymbol} (amount desired: ${amountTokenDesired}, amount minimum: ${amountTokenMin})`);
 }
 
-function outputRemoveLiquidity(decodedInput) {
+function outputRemoveLiquidityInfo(decodedInput) {
   var [ tokenAAddress, tokenBAddress, liquidity, amountAMin, amountBMin, to, deadline ] = decodedInput.contractMethodParameters;
   console.log({ tokenAAddress, tokenBAddress, liquidity, amountAMin, amountBMin, to, deadline });
   liquidity = web3.utils.fromWei(liquidity);
@@ -128,6 +131,19 @@ function outputRemoveLiquidity(decodedInput) {
   let tokenBSymbol = (tokenB) ? tokenB.symbol : '';
 
   console.log(`Removed ${liquidity} liquidity (method: 'removeLiquidity') for token A ${tokenASymbol} (amount minimum: ${amountAmin}) and token B ${tokenBSymbol} (amount minimum: ${amountBmin})`);
+}
+
+function outputRemoveLiquidityEthInfo(decodedInput) {
+  var [ tokenAddress, liquidity, amountTokenMin, amountETHMin, to, deadline ] = decodedInput.contractMethodParameters;
+  console.log({ tokenAddress, liquidity, amountTokenMin, amountETHMin, to, deadline });
+  liquidity = web3.utils.fromWei(liquidity);
+  amountTokenMin = web3.utils.fromWei(amountTokenMin);
+  amountETHMin = web3.utils.fromWei(amountETHMin);
+
+  let token = findTokenBy(tokens, 'address', tokenAddress);
+  let tokenSymbol = (token) ? token.symbol : '';
+
+  console.log(`Removed ${liquidity} liquidity (method: 'removeLiquidityETH') for ONE/wONE (amount mininum: ${amountETHMin}) and token ${tokenSymbol} (amount minimum: ${amountTokenMin})`);
 }
 
 status()
