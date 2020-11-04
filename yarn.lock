@@ -374,10 +374,10 @@
   resolved "https://registry.yarnpkg.com/@swoop-exchange/default-token-list/-/default-token-list-1.4.0.tgz#5e2c3902e2e0cb9f368f714a789da9874db9f304"
   integrity sha512-HohTM8TBtIthUfw8NKmheEwoQRdjgODWRlpxXiuODlIHt6KQL5xa+UVrVc4jkr7pl119gFIjZEqk/mpGf0DSmQ==
 
-"@swoop-exchange/misc@1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@swoop-exchange/misc/-/misc-1.1.0.tgz#7fed05a3cb4eeae82193909358447fa4cc652500"
-  integrity sha512-WHKs4aE4UdkFh5KEE/xxxXirVN9gZ6jN32b2V1Y0eww8UahBs0Lz++VIKCaiIu8UrCZe6+Us5UFDjZix1dZA1w==
+"@swoop-exchange/misc@1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@swoop-exchange/misc/-/misc-1.1.1.tgz#577fc368d39498afd1d98e955a2cb89e872f667e"
+  integrity sha512-KnJzmC8dTwHptaG9yFwwb7XFzJswGEwjyYn9+sWZ2zfOM9GNF0MCIQJu1DNZOlVcIbVN/moi6edcgC2o50Ig2w==
 
 "@swoop-exchange/periphery@1.1.0":
   version "1.1.0"
