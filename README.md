@@ -1,5 +1,13 @@
 # swoop-cli
 
+## Requirements
+
+Install package requirements: `yarn install`
+
+### Private keys
+
+If you intend to use functionality that modifies contract state, make sure to copy .env-example to .env and update private keys accordingly.
+
 ## Tools
 
 ### Pairs
